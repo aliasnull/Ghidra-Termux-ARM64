@@ -50,4 +50,27 @@ if [[ "$answer" != "DELETE" ]]; then
 fi
 
 rm -rf -- "$EXPECTED_DIR"
+
+# Remove only the marked environment block installed by this project.
+if command -v python3 >/dev/null 2>&1; then
+  python3 - <<'PY'
+from pathlib import Path
+
+rc = Path.home() / ".bashrc"
+start = "# >>> Ghidra-Termux-ARM64 managed environment >>>"
+end = "# <<< Ghidra-Termux-ARM64 managed environment <<<"
+
+if rc.exists():
+    text = rc.read_text(encoding="utf-8")
+    if start in text and end in text:
+        before, rest = text.split(start, 1)
+        _, after = rest.split(end, 1)
+        text = before.rstrip() + ("\n\n" if before.strip() else "") + after.lstrip("\n")
+        rc.write_text(text, encoding="utf-8")
+        print("Removed managed GHIDRA_INSTALL_DIR block from ~/.bashrc.")
+PY
+else
+  echo "NOTE: Python 3 unavailable; remove the marked Ghidra block from ~/.bashrc manually."
+fi
+
 echo "Removed: $EXPECTED_DIR"

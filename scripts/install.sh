@@ -72,5 +72,30 @@ done
 
 echo
 echo "Installation/build steps completed."
+# Persist GHIDRA_INSTALL_DIR in a clearly marked, idempotent ~/.bashrc block.
+export GHIDRA_INSTALL_DIR="$GHIDRA_DIR"
+python3 - <<'PY'
+import os
+from pathlib import Path
+
+rc = Path.home() / ".bashrc"
+start = "# >>> Ghidra-Termux-ARM64 managed environment >>>"
+end = "# <<< Ghidra-Termux-ARM64 managed environment <<<"
+path = os.environ["GHIDRA_INSTALL_DIR"]
+block = f'{start}\nexport GHIDRA_INSTALL_DIR="{path}"\n{end}'
+text = rc.read_text(encoding="utf-8") if rc.exists() else ""
+
+if start in text and end in text:
+    before, rest = text.split(start, 1)
+    _, after = rest.split(end, 1)
+    text = before.rstrip() + "\n\n" + block + after
+else:
+    text = text.rstrip() + "\n\n" + block + "\n"
+
+rc.write_text(text, encoding="utf-8")
+PY
+
+echo "GHIDRA_INSTALL_DIR configured as: $GHIDRA_INSTALL_DIR"
+echo "Run 'source ~/.bashrc' or restart Termux to load it into the current shell."
 echo "Next: run scripts/verify.sh or the smoke-test command in docs/INSTALLATION.md."
 echo "Note: this script has not yet been validated on a clean device; inspect and test before public release."

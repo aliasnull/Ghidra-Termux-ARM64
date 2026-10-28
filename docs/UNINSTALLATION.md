@@ -23,6 +23,7 @@ The script refuses to proceed if the target is a symbolic link, if `~/opt` is a 
 ## What is removed?
 
 - `~/opt/ghidra_12.2_PUBLIC` — the Ghidra installation directory, including native components built for this setup.
+- The marked `GHIDRA_INSTALL_DIR` block added by this installer to `~/.bashrc`
 
 ## What is not removed?
 
@@ -30,6 +31,7 @@ The script refuses to proceed if the target is a symbolic link, if `~/opt` is a 
 - Gradle caches
 - `~/opt/ghidra-termux-smoke`, including `verify.log`
 - This Git repository or its documentation
+- Other lines and settings in `~/.bashrc`
 
 These items are left in place so that unrelated tools, logs, and project files are not deleted. Remove them separately only if you are sure you no longer need them.
 

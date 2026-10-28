@@ -18,6 +18,8 @@ Review the scripts before running them. Install dependencies using Termux's pack
 
 The installer is intentionally designed to avoid root operations and does not install a GUI launcher. It should use the official Ghidra release and compile native components locally.
 
+After successful installation, the script adds a marked `GHIDRA_INSTALL_DIR` export block to `~/.bashrc`. Run `source ~/.bashrc` or restart Termux to load it into the current shell. Ghidra itself does not require this variable, but related tooling may use it.
+
 ## Verification
 
 Run the project verification script after installation:
